@@ -211,7 +211,8 @@ class(DATA$cyl)
 x<-DATA$cyl
 y<-DATA$am
 digits<-2
-
+# DEBUG
+x <- table(x,y,useNA = "no")
 
 IWantThe(DATA$cyl,DATA$am,vector="t",digits=2)
 
