@@ -87,7 +87,7 @@ library(ggplot2)
 
 ggplot(DATA,aes(x=am,y=mpg,fill=am))+
   geom_violin(alpha=0.3)+
-geom_boxplot(alpha=0.5,width=0.3)+
+  geom_boxplot(alpha=0.5,width=0.3)+
   geom_jitter(alpha=0.7,width=0.1)+
   theme(legend.position = "none")+
   labs(x="",y="Miles per gallon")+
@@ -111,3 +111,103 @@ sh_df <- data.frame(p.value=sh$p.value,statistic=sh$statistic)
 row.names(sh_df)<-NULL
 sh_df$p.value
 sh_df
+
+
+
+
+
+?seq_along
+
+DATA$vs
+
+t1<-table(DATA$vs)
+
+t1<-table(unlist(DATA[,"vs"]))
+
+
+rbind(prop.table(t1,margin=1)*100)
+t2<-data.frame(rbind(prop.table(t1,margin=1)*100))
+
+t1<-data.frame(rbind(t1))
+names(t1) <- paste0(names(t1),"_n")
+
+
+names(t2) <- paste0(names(t2),"_%")
+
+
+t.final <- cbind(t1,t2)[,order(c(2*(seq_along(t1)-1)+1,2 * (seq_along(t2))))]
+t.final
+
+
+getMe.summary(DATA$vs,DATA$am)
+IWantThe(DATA$vs,DATA$am,"t")$description
+
+
+?datasets::mtcars
+
+
+# This is what he meant when he wanted us to show all the values on a data.frame
+
+
+
+# Let's do a function doing this, it is not complicated
+
+x <- DATA$vs # Just like here
+y <- DATA$am
+data<-DATA
+DATA<-getMe.nas(DATA)
+values <- c("vs","am")
+# We are just going to do it with data
+x<-"vs"
+# Because otherwise, I am going to have
+class(x)
+# Well, you can pass by separate...
+# It does need to be on one
+
+# Now, we just put the freq and all as Fernando did
+digits<-Inf
+i<-2
+# Now, 'x' and 'y' are mandatory and if 'data' is not null, then we use 'x' and 'y' as indices
+ThisIsWhatHeMeantByDataFrame<-function(x,y,data=NULL,na.rm=TRUE,digits=Inf){
+    if(!is.null(data)){
+      if(!is.data.frame(data)) stop("The data specified is not a data frame.")
+      else{
+        if(!is.character(x) | !is.character(y)) stop("If you give 'data', you must put names on 'x' and 'y'.")
+        else{
+            x <- data[,x]
+            y <- data[,y]
+        }
+      }
+    }
+  if(na.rm){
+    x <- na.omit(x)
+    y <- na.omit(y)
+  }
+    t1 <-table(unlist(x),unlist(y))
+    t2 <- data.frame(rbind(round(prop.table(t1,margin=1)*100,digits=digits)))
+    t1<-data.frame(rbind(t1))
+    # names(t1)
+    # names(t1[1,]) <- parse(names(t1[1,]),"_n")
+    # attributes(t1)
+
+    ## just putting '_n' ##
+      names(t1) <- paste0(names(t1),"_n")
+      names(t2) <- paste0(names(t2),"_%")
+    ## just putting '_n' ##
+    # Now, I want to merge these two tables
+    t.final <- cbind(t1,t2)[,c(2*(seq_along(t1)-1)+1,2*seq_along(t2))]
+    # cbind(t1,t2)[,c(1,3,2,4)]
+
+    t.final <- cbind(ohhYeah=rownames(t.final),t.final)
+    rownames(t.final) <- NULL
+    return(t.final)
+}
+# data.frame(rbind(1,2))
+
+
+ThisIsWhatHeMeantByDataFrame("vs","am",data=DATA,na.rm=TRUE,digits=2)
+getMe.summary(DATA$vs,DATA$am)$p.value
+
+
+x<-DATA$vs
+y<-DATA$am
