@@ -61,9 +61,9 @@ names(long_f)[2]<-"SEX"
 # Sorry for the names, they are not correct (long_f,wide_f), it is the other way around
 
 
-DATA<-datasets::mtcars
 
-DATA$vs <- factor(DATA$vs,levels = c(0,1),labels = c("V-shaped","Straight"))
+
+
 .desc.numeric(DATA$mpg,DATA$am,trim=0)
 mean(DATA$mpg)
 trimmed(data = DATA,trim=0,values="mpg")
@@ -75,7 +75,7 @@ rm(list=ls())
 source("C:/Users/Agus/OneDrive - Universidad de Castilla-La Mancha/Escritorio/2do año/2do cuatri/Statistics (Fernando)/R/Libraries/getMe.libraries.R")
 getMe.libraries()
 
-DATA$am <- factor(DATA$am,levels = c(0,1),labels = c("Automatic","Manual"))
+
 
 compare.samples(DATA$mpg,DATA$am,DEBUG=T)
 
@@ -140,7 +140,7 @@ t.final
 
 
 getMe.summary(DATA$vs,DATA$am)
-IWantThe(DATA$vs,DATA$am,"t")$description
+IWantThe(DATA$vs,DATA$am,"d")
 
 
 ?datasets::mtcars
@@ -168,46 +168,60 @@ class(x)
 digits<-Inf
 i<-2
 # Now, 'x' and 'y' are mandatory and if 'data' is not null, then we use 'x' and 'y' as indices
-ThisIsWhatHeMeantByDataFrame<-function(x,y,data=NULL,na.rm=TRUE,digits=Inf){
-    if(!is.null(data)){
-      if(!is.data.frame(data)) stop("The data specified is not a data frame.")
-      else{
-        if(!is.character(x) | !is.character(y)) stop("If you give 'data', you must put names on 'x' and 'y'.")
-        else{
-            x <- data[,x]
-            y <- data[,y]
-        }
-      }
-    }
-  if(na.rm){
-    x <- na.omit(x)
-    y <- na.omit(y)
-  }
-    t1 <-table(unlist(x),unlist(y))
-    t2 <- data.frame(rbind(round(prop.table(t1,margin=1)*100,digits=digits)))
-    t1<-data.frame(rbind(t1))
-    # names(t1)
-    # names(t1[1,]) <- parse(names(t1[1,]),"_n")
-    # attributes(t1)
 
-    ## just putting '_n' ##
-      names(t1) <- paste0(names(t1),"_n")
-      names(t2) <- paste0(names(t2),"_%")
-    ## just putting '_n' ##
-    # Now, I want to merge these two tables
-    t.final <- cbind(t1,t2)[,c(2*(seq_along(t1)-1)+1,2*seq_along(t2))]
-    # cbind(t1,t2)[,c(1,3,2,4)]
-
-    t.final <- cbind(ohhYeah=rownames(t.final),t.final)
-    rownames(t.final) <- NULL
-    return(t.final)
-}
 # data.frame(rbind(1,2))
 
 
-ThisIsWhatHeMeantByDataFrame("vs","am",data=DATA,na.rm=TRUE,digits=2)
-getMe.summary(DATA$vs,DATA$am)$p.value
 
+getMe.summary(DATA$vs,DATA$am,digits=Inf)$test$p.value
 
-x<-DATA$vs
+IWantThe(DATA$vs,DATA$am,vector="t",digits=3)
+digits<-2
+
+x<-DATA$cyl
 y<-DATA$am
+
+
+
+IWantThe(DATA$vs,DATA$am,digits = 2,vector = "t")
+ThisIsWhatHeMeantByDataFrame("vs","am",data=DATA,na.rm=TRUE,digits=2)
+
+#-----------------------------------------------------------------------------------------------------------------------------------------
+
+rm(list=ls())
+source("C:/Users/Agus/OneDrive - Universidad de Castilla-La Mancha/Escritorio/2do año/2do cuatri/Statistics (Fernando)/R/Libraries/getMe.libraries.R")
+getMe.libraries()
+DATA<-datasets::mtcars
+DATA$vs <- factor(DATA$vs,levels = c(0,1),labels = c("V-shaped","Straight"))
+DATA$am <- factor(DATA$am,levels = c(0,1),labels = c("Automatic","Manual"))
+ThisIsWhatHeMeantByDataFrame("vs","am",data=DATA,na.rm=TRUE,digits=2)
+IWantThe(DATA$vs,DATA$am,vector="t",digits=2)
+
+
+IWantThe(DATA$vs,DATA$am,vector = "t")
+
+
+
+
+ThisIsWhatHeMeantByDataFrame("cyl","am",data=DATA,digits=2,na.rm=FALSE)
+DATA$cyl <- factor(DATA$cyl,levels = c(4,6,8),labels = c("4 cyl","6 cyl","8 cyl"))
+round(fisher.test(x,y)$conf.int,digits=2)
+IWantThe(DATA$cyl,DATA$am,vector="d",digits=2)
+class(DATA$cyl)
+x<-DATA$cyl
+y<-DATA$am
+digits<-2
+
+
+IWantThe(DATA$cyl,DATA$am,vector="t",digits=2)
+
+
+# The data.frame breaks since it is trying to access to a third column that does not exist
+# My code works only (the data.frame one) for squared matrix
+
+# With tables there is no problem
+
+# I still do not see the independent and independent thing with categorical variables when calculating proportions
+
+
+# Let's do CNII
