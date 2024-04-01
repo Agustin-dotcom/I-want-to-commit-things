@@ -19,7 +19,7 @@ DATA
 ?reshape
 wide_f<-reshape(data = DATA,v.names=c("ER_REASON","ER_TIME"),direction = "long",varying = c("ER_REASON_V1","ER_TIME_V1","ER_REASON_V2","ER_TIME_V2"),times=1:2,timevar = "VISIT",idvar = "ID")
 row.names(wide_f)<-NULL
-wide_f
+DATA_LONG<-wide_f
 # wide_f$id<-NULL
 # wide_f
 
@@ -206,7 +206,7 @@ IWantThe(DATA$vs,DATA$am,vector = "t")
 ThisIsWhatHeMeantByDataFrame("cyl","am",data=DATA,digits=2,na.rm=FALSE)
 DATA$cyl <- factor(DATA$cyl,levels = c(4,6,8),labels = c("4 cyl","6 cyl","8 cyl"))
 round(fisher.test(x,y)$conf.int,digits=2)
-IWantThe(DATA$cyl,DATA$am,vector="d",digits=2)
+IWantThe(DATA$vs,DATA$am,vector="t",digits=3)
 class(DATA$cyl)
 x<-DATA$cyl
 y<-DATA$am
@@ -226,3 +226,52 @@ IWantThe(DATA$cyl,DATA$am,vector="t",digits=2)
 
 
 # Let's do CNII
+
+
+# Good job, Agustín 😁😃
+
+# Let's just keep on with the lab
+
+
+library(ggplot2)
+ggplot(DATA, aes(x=am, fill = vs)) +
+  geom_bar(aes(y=(after_stat(count)/sum(after_stat(count)))),position = "dodge") +
+  scale_y_continuous(labels = scales::percent)+
+  ylab("")
+
+DATA_LONG
+
+
+DATA
+
+what<-.desc.numeric(as.numeric(DATA_LONG$ER_TIME),as.factor(DATA_LONG$VISIT),na.rm=TRUE,digits = Inf)
+x<-DATA_LONG$ER_TIME
+class(DATA_LONG$ER_TIME)
+
+
+.l.1 <- "agus"
+.l.2 <- "ainara"
+my_df<-rbind(.l.1,.l.2)
+row.names(my_df) <- NULL
+my_df
+
+class(my_df)<-c(class(my_df),"agustin")
+class(what)<-c(class(what),"agustin")
+what
+names(my_df) <- c("Agustin")
+my_df
+attributes(my_df)
+
+
+# It is amatrix !
+matrix(what)
+what
+class(what)<-c(class(what),"agustin")
+what
+
+
+# Since one of them is not normal, we use Wilcoxon-Mann-Whitney
+
+# Matrices are printed beautifully
+
+compare.samples(as.numeric(DATA_LONG$ER_TIME),DATA_LONG$VISIT,na.rm=FALSE,DEBUG=TRUE)
